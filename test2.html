@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       aside {
-      min-height: 100vh;
+      min-height: 100vh !important;
       position: fixed;
       padding: 0 !important;
       }
@@ -34,6 +34,10 @@
       }
       #nav-collapse {
       display: none;
+      padding: 0 !important;
+      }
+      #nav-collapse li {
+      float: NONE;
       }
       }
     </style>
@@ -64,7 +68,7 @@
       </nav>
     </div>
     <div class="row">
-      <aside class="col l4 xl3 hide-on-med-and-down grey darken-4" style="min-height: 100vh;">
+      <aside class="col l4 xl3 hide-on-med-and-down grey darken-4 z-depth-5">
 	<h4 class="grey-text text-lighten-2 center-align">Mathew Marcus</h4>
 	<h6 class="grey-text text-lighten-2 center-align">Coding</h6>
 	<h6 class="grey-text text-lighten-2 center-align">Infosec</h6>
