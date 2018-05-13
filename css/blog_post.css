@@ -1,0 +1,9 @@
+.hljs-keyword {
+  color: #64dd17 !important
+}
+main > p,
+main > ul > li,
+main > ol > li {
+  font-size: 1.2em
+}
+
