@@ -33,7 +33,8 @@
       transform: 0;
       }
       #nav-collapse {
-      display: none;
+      transition: .5s;
+      overflow: hidden;
       padding: 0 !important;
       }
       #nav-collapse li {
@@ -237,20 +238,22 @@ if __name__ == '__main__':
     <script>hljs.initHighlightingOnLoad();</script>
     
     <script>
+      document.getElementById("nav-collapse").style.height = "0px";
       function collapseNav(innerWidth) {
       var nav_collapse = document.getElementById("nav-collapse");
       if (innerWidth.matches) {
-        nav_collapse.style.display = "None";      
+        nav_collapse.style.height = "0px";
       }
       }
       
       function toggleNav() {
       var nav_collapse = document.getElementById("nav-collapse");
-      if (!nav_collapse.style.display || nav_collapse.style.display === "none") {
-        nav_collapse.style.display = "block";
+
+      if (nav_collapse.style.height === "0px") {
+        nav_collapse.style.height = nav_collapse.scrollHeight + 'px';
       }
       else {
-        nav_collapse.style.display = "None";
+        nav_collapse.style.height = "0px";
       }
       }
 
