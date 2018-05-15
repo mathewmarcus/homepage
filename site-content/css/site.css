@@ -1,17 +1,19 @@
 aside {
-    min-height: 100vh !important;
+    height: 100vh !important;
     position: fixed;
     padding: 0 !important;
 }
-aside > ul > li {
+
+aside ul li {
     line-height: 48px;
 }
-aside > ul > li > a {
+aside ul li a {
     padding: 0 32px;
-    display: block;
+    display: block !important;
 }
 
-aside > ul > li > a:hover,
+
+aside ul li a:hover,
 nav ul a:hover,
 aside > ul > li.active,
 nav ul > li.active {
@@ -34,3 +36,12 @@ nav ul > li.active {
     }
 
 }
+
+footer .row {
+    margin-bottom: 0;
+}
+footer i,
+#child2 i {
+    margin: .2em
+}
+

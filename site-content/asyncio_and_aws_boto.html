@@ -3,9 +3,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="screen" />
     <link rel="stylesheet" href="css/materialize.min.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/obsidian.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
     <link rel="stylesheet" href="css/site.css" media="screen">
     <link rel="stylesheet" href="css/blog_post.css" media="screen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   
   <body>
@@ -34,18 +36,24 @@
     </div>
     <div class="row">
       <aside class="col l4 xl3 hide-on-med-and-down grey darken-4 z-depth-5">
-	<h4 class="grey-text text-lighten-2 center-align">Mathew Marcus</h4>
-	<h6 class="grey-text text-lighten-2 center-align">Coding</h6>
-	<h6 class="grey-text text-lighten-2 center-align">Infosec</h6>
-	<h6 class="grey-text text-lighten-2 center-align">(<span class="light-green-text text-accent-4">Arch</span>) Linux</h6>
-
+	<div id="child1">
+	  <h4 class="white-text center-align">Mathew Marcus</h4>
+	  <h6 class="white-text center-align">Coding</h6>
+	  <h6 class="white-text center-align">Infosec</h6>
+	  <h6 class="white-text center-align">(<span class="light-green-text text-accent-4">Arch</span>) Linux</h6>
 	<br>
-	
 	<ul>
-	  <li class="active"><a class="grey-text text-lighten-2" href="#!">Blog</a></li>
-	  <li><a class="grey-text text-lighten-2" href="#!">About Me</a></li>
-	  <li><a class="grey-text text-lighten-2" href="#!">Projects</a></li>
+	  <li class="active"><a class="white-text waves-effect" href="#!">Blog</a></li>
+	  <li><a class="white-text waves-effect" href="#!">About Me</a></li>
+	  <li><a class="white-text waves-effect" href="#!">Projects</a></li>
 	</ul>
+	</div>
+	<br>
+	<div id="child2" class="center-align">
+	  <a><i class="material-icons small white-text fas fa-envelope"></i></a>
+	  <a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons small white-text fab fa-github"></i></a>
+	  <a><i class="material-icons small white-text fab fa-linkedin-in"></i></a>
+	</div>
       </aside>
 
       <div class="col s12 l8 xl9 offset-l4 offset-xl3">
@@ -188,9 +196,17 @@ if __name__ == '__main__':
 <p>And to reiterate, although this example includes only lambda invocations, with the same header signing function and some simple modifications/additions to the <code>aiohttp</code> wrapper functions we could asynchronously call any number and variety of AWS services.</p>
 	</main>
 	<footer class="page-footer white">
-	  <div class="footer-copyright white">
-	    <div class="container black-text center-align">
-	      © Mathew Marcus 2018
+	  <div class="footer-copyright white black-text">
+	    <div class="center-align container">
+	      <div class="row">
+	      <a><i class="material-icons tiny black-text fas fa-envelope"></i></a>
+	      <a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons tiny black-text fab fa-github"></i></a>
+	      <a><i class="material-icons tiny black-text fab fa-linkedin-in"></i></a>
+	      </div>
+
+	      <div class="row">
+		© Mathew Marcus 2018
+		</div>
 	    </div>
 	  </div>
 	</footer>

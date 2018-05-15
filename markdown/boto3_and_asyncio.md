@@ -1,9 +1,9 @@
 # Asynchronous AWS API calls with asyncio
 
 ## Problem
-Currently, `boto3`, the AWS Python SDK, constitutes the primary method of interacting with the multitude of AWS services from Python. For all its many capabilities, however, `boto3` - and its lower-level dependency `botocore` - are fundamentally synchronous and thus essentially incompatibile with `asyncio` coroutines. 
+`boto3`, the AWS Python SDK, currently constitutes the primary API for interacting with the multitude of AWS services from Python. For all of its many capabilities, however, `boto3` - and its lower-level dependency `botocore` - are fundamentally synchronous and thus essentially incompatibile with `asyncio` coroutines. 
 
-This can be somewhat limiting, because there often arises scenarios where we need to make several/numerous AWS service/API calls, wait for the results, and then further process the returned data. Performing each call in serial can waste time - if the call count is high - and while we could always use one of the `multiprocessing`, `threading`, or `concurrent.futures` modules, performing concurrent operations in this manner can inccur additional penalties because of the time/memory overhead involved in the creation of the threads/process.
+This can be somewhat limiting, because there often arises scenarios where we need to make a number of AWS service/API calls, wait for the results, and then further process the returned data. Performing each call in serial can waste time - if the call count is high - and while we could always use one of the `multiprocessing`, `threading`, or `concurrent.futures` modules, performing concurrent operations in this manner can inccur additional penalties because of the time/memory overhead involved in the creation of the threads/process.
 
 For more info on the relative performance of synchronous, threaded, multiprocessed, and asynchronous python code, watch  [Shahriar Tajbakhsh's Parallelism Shootout presentation](https://www.youtube.com/watch?v=B0Qfe3U_hKU&feature=youtu.be), and for more general information on concurrency in Python, watch [this 2015 PyCon presentation](https://www.youtube.com/watch?v=MCs5OvhV9S4) by the inimitable David Beazly.
 
@@ -17,7 +17,7 @@ So what makes `boto3` and `botocore` incompatible with true aynciocoroutines - i
 ## Solution
 At the lowest level all that `boto3`/`botocore` - or any of the AWS SKDS for that matter - provide us are convenience wrapper classes for making API calls to the AWS services via HTTP. 
 
-So, the solution to the `boto3`-`asyncio` conundrum is to abandon boto3 altogether and to create the HTTP request from scratch, as detailed (here)[https://docs.aws.amazon.com/lambda/latest/dg/API_Invoke.html], and then manually sign it, as detailed (here)[https://docs.aws.amazon.com/general/latest/gr/sigv4-signed-request-examples.html#sig-v4-examples-post].
+So, the solution to the `boto3`-`asyncio` conundrum is to abandon boto3 altogether and to create the HTTP request from scratch, as detailed [here](https://docs.aws.amazon.com/lambda/latest/dg/API_Invoke.html), and then manually sign it, as detailed [here](https://docs.aws.amazon.com/general/latest/gr/sigv4-signed-request-examples.html#sig-v4-examples-post).
 
 
 ### Example
