@@ -1,0 +1,36 @@
+aside {
+    min-height: 100vh !important;
+    position: fixed;
+    padding: 0 !important;
+}
+aside > ul > li {
+    line-height: 48px;
+}
+aside > ul > li > a {
+    padding: 0 32px;
+    display: block;
+}
+
+aside > ul > li > a:hover,
+nav ul a:hover,
+aside > ul > li.active,
+nav ul > li.active {
+    background-color: rgba(242, 238, 238, 0.05);
+}
+
+@media only screen and (max-width: 992px) {
+    nav .brand-logo {
+	left: auto;
+	webkit transform: 0;
+	transform: 0;
+    }
+    #nav-collapse {
+	transition: .5s;
+	overflow: hidden;
+	padding: 0 !important;
+    }
+    #nav-collapse li {
+	float: NONE;
+    }
+
+}
