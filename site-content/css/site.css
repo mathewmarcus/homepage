@@ -44,4 +44,8 @@ footer i,
 #child2 i {
     margin: .2em
 }
+footer i:hover,
+#child2 i:hover {
+    color: #64dd17 !important;
+}
 
