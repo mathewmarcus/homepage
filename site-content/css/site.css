@@ -26,14 +26,7 @@ nav ul > li.active {
 	webkit transform: 0;
 	transform: 0;
     }
-    #nav-collapse {
-	transition: .5s;
-	overflow: hidden;
-	padding: 0 !important;
-    }
-    #nav-collapse li {
-	float: NONE;
-    }
+
 
 }
 
@@ -45,7 +38,25 @@ footer i,
     margin: .2em
 }
 footer i:hover,
-#child2 i:hover {
+#child2 i:hover,
+#hamburger i:hover{
     color: #64dd17 !important;
 }
 
+.nav-wrapper {
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    #nav-collapse {
+	transition: .5s;
+	overflow: hidden;
+	padding: 0 !important;
+    }
+    #nav-collapse li {
+	float: NONE;
+    }
+    .nav-wrapper i {
+	display: inline-block !important;
+    }
+}
