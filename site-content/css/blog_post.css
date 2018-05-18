@@ -1,16 +1,6 @@
 .hljs-keyword {
   color: #64dd17 !important
 }
-/* main > p, */
-/* main > ul > li, */
-/* main > ol > li { */
-/*   font-size: 1.2em */
-/* } */
-body main p a {
-    color: rgba(0,0,0,0.87);
-    text-decoration: underline;
-    font-weight: bold;
-}
 code:not(.python) {
     background: rgba(0,0,0,.07);
     padding: 0.2em;

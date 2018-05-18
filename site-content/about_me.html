@@ -1,0 +1,174 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="screen" />
+    <link rel="stylesheet" href="css/materialize.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/obsidian.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/site.css" media="screen">
+    <link rel="stylesheet" href="css/about_me.css" media="screen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  
+  <body>
+    <div class="navbar-fixed hide-on-large-only">
+      <nav class="row grey darken-4 nav-extended">
+
+	<div class="nav-wrapper col s12">
+	  <a href="#" class="brand-logo">Mathew Marcus</a>
+	  <div id="hamburger" class="right-align">
+	    <a href="#!" onclick="toggleNav()"><i class="tiny material-icons hide-on-med-and-up">menu</i></a>
+	  </div>
+
+	  <ul id="nav-mobile" class="right hide-on-small-only">
+	    <li class="active"><a class="grey-text text-lighten-2" href="#!">Blog</a></li>
+	    <li><a class="grey-text text-lighten-2" href="#!">About Me</a></li>
+	    <li><a class="grey-text text-lighten-2" href="#!">Projects</a></li>
+	  </ul>
+	</div>
+
+	<div id="nav-collapse" class="col s12 hide-on-med-and-up">
+	  <ul>
+	    <li class="active"><a class="grey-text text-lighten-2" href="#!">Blog</a></li>
+	    <li><a class="grey-text text-lighten-2" href="#!">About Me</a></li>
+	    <li><a class="grey-text text-lighten-2" href="#!">Projects</a></li>
+	  </ul>
+	</div>
+
+      </nav>
+    </div>
+    <div class="row">
+      <aside class="col l4 xl3 hide-on-med-and-down grey darken-4 z-depth-5">
+	<div id="child1">
+	  <h4 class="white-text center-align">Mathew Marcus</h4>
+	  <h6 class="white-text center-align">Coding</h6>
+	  <h6 class="white-text center-align">Infosec</h6>
+	  <h6 class="white-text center-align">(<span class="light-green-text text-accent-4">Arch</span>) Linux</h6>
+	  <br>
+	  <ul>
+	    <li class="active"><a class="white-text waves-effect" href="#!">Blog</a></li>
+	    <li><a class="white-text waves-effect" href="#!">About Me</a></li>
+	    <li><a class="white-text waves-effect" href="#!">Projects</a></li>
+	  </ul>
+	</div>
+	<br>
+	<div id="child2" class="center-align">
+	  <a class="social_email"><i class="material-icons small white-text fas fa-envelope"></i></a>
+	  <a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons small white-text fab fa-github"></i></a>
+	  <a href="https://www.linkedin.com/in/mathew-marcus-76243b113/" target="_blank"><i class="material-icons small white-text fab fa-linkedin-in"></i></a>
+	</div>
+      </aside>
+
+      <div class="col s12 l8 xl9 offset-l4 offset-xl3">
+	<main class="container">
+	  <h1>About Me</h1>
+
+	  <section>
+	    <h2>Work</h2>
+	    <p>
+	      Currently, I work as a fullstack<sup><a href="#fullstack-footnote">[1]</a></sup> web developer. More specifically, I spend (approximately) 75% of my time writing Python microservices for deployment in a Linux environment in AWS, and the other 25% creating single page web applications in Angular. I also perform various devops-related tasks on an ad-hoc basis. That said, this ratio varies depending on the needs of my team and the project.
+	    </p>
+	  </section>
+
+	  <section>
+	    <h2>Home</h2>
+	    <p>
+	      While I love web development, both at work and in my free time, I also engage in much wider variety of coding and other technical pursuits. These include
+	    </p>
+
+	    <ul class="browser-default">
+	      <li>Linux system programming in C</li>
+	      <li>Infosec research</li>
+	      <li>Building, modifying, and pen-testing my home lab network</li>
+	      <li>Maintaing and tweaking my Arch Linux installations</li>
+	      <li>Creating and contributing to various open source projectcs</li>
+	    </ul>
+
+	    <p>
+	      Although the above list may seem somewhat eclectic, I can attribute all of my technical predilictions - from my fondness for low-level close-to-the-metal languages like C to my passion for coding in general - to my need to truly understand how things work.
+	    </p>
+	  </section>
+
+	  <section>
+	    <h2>Programming Languages</h2>
+	    <ul class="collection">
+	      <li class="collection-item">Python</li>
+	      <li class="collection-item">C</li>
+	      <li class="collection-item">Javascript</li>
+	    </ul>
+	    
+	    <p>
+	      When enumerating known programming languages on a resume it can be tempting to include every language in which one has written so much as a hello world program. As such, lest readers misconstrue the brevity of the above list as an unwillingness to learn new languages,  I want to emphasize that I am only listing the languages in which I consider myself proficient/well-versed and which I
+	    </p>
+
+	    <ol>
+	      <li>use professionally</li>
+	      <li>and/or guse extensively/regularly outside of work</li>
+	    </ol>	    
+
+	    <p>
+	      
+	    </p>
+	  </section>
+
+	  <section>
+	    <h2>Favorite Software</h2>
+	    <p>
+	      The following is a list of some libraries, frameworks, and other miscellaneous pieces of software which I like and/or use regularly. It is by no means exhaustive.
+	    </p>
+
+	    <ul>
+	      <li>Web-app framework: <span class="bold">Flask</span></li>	     
+	      <li>Text editor: <span class="bold">Emacs</span></li>
+	      <li>Linux Distro: <span class="bold">Arch</span></li>
+	      <li>Cloud Environment: <span class="bold">Amazon Web Services</span></li>
+	      <li>Infrastructure orchestration: <span class="bold">Ansible</span></li>
+	      <li>Web server: <span class="bold">Nginx</span></li>
+	      <li>Containerization: <span class="bold">Docker</span></li>
+	      <li>Front-end SPA framework: <span class="bold">Angular</span></li>	      	      
+	      <li>Relational Database: <span class="bold">PostgreSQL</span></li>
+	      <li>NoSQL Database: <span class="bold">DynamoDB</span></li>
+	      <li>SQL ORM: <span class="bold">SQLAlchemy w/ Alembic</span></li>	      
+	      <li>WSGI server: <span class="bold">uWSGI</span></li>
+	    </ul>
+	  </section>
+
+	  <section>
+	    <h2>Why Blog?</h2>
+	    <p>When learning new technologies I invariably find myself taking notes and, prior to publishing this blog, these notes were disparate, disorganized, and lacking in any structural/stylistic consistency. As such, in addition to serving as a portfolio - and occasionally as a soapbox - this blog primarily functions as my digital notebook.
+	    </p>
+	  </section>
+	  <section>
+	    <h5>Footnotes</h5>
+	    <ol>
+	      <li id="fullstack-footnote" class="footnote">This is a contentious term, as evidenced <a href="https://dev.to/evgenyk/a-mythical-full-stack-developer">here</a>, <a href="https://dev.to/lewismenelaws/how-would-you-define-a-full-stack-developer-and-what-role-do-they-play-in-the-company--2o28">here</a>, and <a href="https://dev.to/remotesynth/theres-no-such-thing-as-a-full-stack-developer-2fp9">here</a>. While I agree that achieving expertise across the stack may be a pipe dream, I feel that <em>endeavoring</em> to achieve expertise across the stack is both productive and laudable. From what I've seen in my professional career, this generally results in the acquisition of both a great breadth of knowledge as well as depth in a particular area.
+	      </li>
+	    </ol>
+	  </section>
+
+	</main>
+	
+	<footer class="page-footer white">
+	  <div class="footer-copyright white black-text">
+	    <div class="center-align container">
+	      <div class="row">
+		<a class="social_email"><i class="material-icons tiny black-text fas fa-envelope"></i></a>
+		<a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons tiny black-text fab fa-github"></i></a>
+		<a href="https://www.linkedin.com/in/mathew-marcus-76243b113/" target="_blank"><i class="material-icons tiny black-text fab fa-linkedin-in"></i></a>
+	      </div>
+
+	      <div class="row">
+		© Mathew Marcus 2018
+	      </div>
+	    </div>
+	  </div>
+	</footer>
+
+      </div>
+    </div>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript" src="js/site.js"></script>
+
+  </body>
+</html>
