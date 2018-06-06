@@ -38,7 +38,7 @@ def main():
 
     disqus_script = template_html.body.footer.script
     disqus_script.string = disqus_script.string.replace('PAGE_IDENTIFIER',
-                                                        basename(args.markdown_input).split('.')[0])
+                                                        '\'' + basename(args.markdown_input).split('.')[0] + '\'')
 
     args.output.write(str(template_html))
 
