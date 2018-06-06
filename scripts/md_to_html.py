@@ -2,6 +2,7 @@ from argparse import ArgumentParser, FileType
 from sys import stdout
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from os.path import basename
 import subprocess
 
 parser = ArgumentParser(description='convert supplied markdown file to html and write it to new html file based on <template>')
@@ -34,6 +35,10 @@ def main():
         template_html.body.main.replace_with(main_tag)
     except AttributeError:
         template_html.body.footer.insert_before(main_tag)
+
+    disqus_script = template_html.body.footer.script
+    disqus_script.string = disqus_script.string.replace('PAGE_IDENTIFIER',
+                                                        basename(args.markdown_input).split('.')[0])
 
     args.output.write(str(template_html))
 
