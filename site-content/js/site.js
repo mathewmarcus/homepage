@@ -25,5 +25,8 @@ function add_email() {
 
 hljs.initHighlightingOnLoad();
 document.getElementById('nav-collapse').style.height = '0px';
-window.matchMedia('(min-width: 600px)').addListener(collapseNav)
-document.addEventListener('DOMContentLoaded', add_email)
+window.matchMedia('(min-width: 600px)').addListener(collapseNav);
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('mousemove', add_email, {once: true})
+}, {once: true});
+

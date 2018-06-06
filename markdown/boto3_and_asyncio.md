@@ -3,7 +3,7 @@
 ## Problem
 `boto3`, the AWS Python SDK, currently constitutes the primary API for interacting with the multitude of AWS services from Python. For all of its many capabilities, however, `boto3` - and its lower-level dependency `botocore` - are fundamentally synchronous and thus essentially incompatibile with `asyncio` coroutines. 
 
-This can be somewhat limiting, because there often arises scenarios where we need to make a number of AWS service/API calls, wait for the results, and then further process the returned data. Performing each call in serial can waste time - if the call count is high - and while we could always use one of the `multiprocessing`, `threading`, or `concurrent.futures` modules, performing concurrent operations in this manner can inccur additional penalties because of the time/memory overhead involved in the creation of the threads/process.
+This can be somewhat limiting, because there often arises scenarios where we need to make a number of AWS service/API calls, wait for the results, and then further process the returned data. Performing each call in serial can waste time - if the call count is high - and while we could always use one of the `multiprocessing`, `threading`, or `concurrent.futures` modules, performing concurrent operations in this manner can inccur additional penalties because of the time/memory overhead involved in the creation of the threads/processes.
 
 For more info on the relative performance of synchronous, threaded, multiprocessed, and asynchronous python code, watch  [Shahriar Tajbakhsh's Parallelism Shootout presentation](https://www.youtube.com/watch?v=B0Qfe3U_hKU&feature=youtu.be), and for more general information on concurrency in Python, watch [this 2015 PyCon presentation](https://www.youtube.com/watch?v=MCs5OvhV9S4) by the inimitable David Beazly.
 
@@ -11,7 +11,7 @@ For more info on the relative performance of synchronous, threaded, multiprocess
 ## Background
 So what makes `boto3` and `botocore` incompatible with true aynciocoroutines - i.e. coroutines which do not simply offload work to other threads/processes via `asyncio.get_event_loop().run_in_executor(<some_boto3_call>)`? Well, in order to perform asynchronous network IO, the underlying sockets used by the library must be non-blocking, i.e. they must be created with the `SOCK_NONBLOCK` type or modified via a call to `fcntl` to have the file status flag of `O_NONBLOCK`
 
-`botocore`, on the other hand, uses `urllib`(n) from the Python standard library which uses blocking sockets.
+`botocore`, on the other hand, uses `urllib3` from the Python standard library which uses blocking sockets.
 
 
 ## Solution
@@ -21,7 +21,7 @@ So, the solution to the `boto3`-`asyncio` conundrum is to abandon boto3 altogeth
 
 
 ### Example
-Lets envision a scenario where we want to spawn of n concurrent lambda requests. It just as easily  be any number of requests to any number of different AWS services, but for the purposes of simplicity we'll create 100 different requests to 100 different lambdas. If this were synchronous code, we would use the `boto3.client('lambda').invoke` method, but for async invocations we'll be creating the HTTPrequest(s) ourselves.
+Lets envision a scenario where we want to spawn n concurrent lambda requests. It could just as easily be any number of requests to any number of different AWS services, but for the purposes of simplicity we'll create 100 different requests to 100 different lambdas. If this were synchronous code, we would use the `boto3.client('lambda').invoke` method, but for async invocations we'll be creating the HTTP request(s) ourselves.
 
 
 #### Requests
