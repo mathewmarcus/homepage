@@ -19,6 +19,10 @@ def main():
     md_html = completed_process.stdout
 
     md_html = BeautifulSoup(md_html, 'html.parser')
+
+    for link in md_html.find_all('a'):
+        link['target'] = '_blank'
+
     main_tag = Tag(name='main')
     main_tag['class'] = 'container'
     main_tag.append('\n')
