@@ -3,7 +3,8 @@ main ul li,
 main ol li {
   font-size: 1.2em
 }
-body main p a {
+body main p a,
+body main section a{
     color: rgba(0,0,0,0.87);
     text-decoration: underline;
     font-weight: bold;
