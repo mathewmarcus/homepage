@@ -1,7 +1,11 @@
 main p,
 main ul li,
 main ol li {
-  font-size: 1.2em
+    font-size: 1.2em;
+}
+
+main ol ol li{
+    font-size: 1em;
 }
 body main p a,
 body main section a{
