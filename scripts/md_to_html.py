@@ -19,6 +19,7 @@ def main():
     md_html = completed_process.stdout
 
     md_html = BeautifulSoup(md_html, 'html.parser')
+    blog_post_title = md_html.h1.string + ' - Mathew Marcus'
 
     for link in md_html.find_all('a'):
         link['target'] = '_blank'
@@ -43,6 +44,11 @@ def main():
     disqus_script = template_html.body.footer.script
     disqus_script.string = disqus_script.string.replace('PAGE_IDENTIFIER',
                                                         '\'' + basename(args.markdown_input).split('.')[0] + '\'')
+
+    title = template_html.new_tag("title")
+    title.string = blog_post_title
+    template_html.head.append(title)
+    template_html
 
     args.output.write(str(template_html))
 
