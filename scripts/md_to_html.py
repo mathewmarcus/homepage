@@ -8,7 +8,7 @@ import subprocess
 parser = ArgumentParser(description='convert supplied markdown file to html and write it to new html file based on <template>')
 parser.add_argument('markdown_input')
 parser.add_argument('--output', '-o', default=stdout, type=FileType('w'))
-parser.add_argument('--html_template', '-t', default='./templates/blog_post.html', type=FileType('r'))
+parser.add_argument('--html_template', '-t', default='./templates/blog-post.html', type=FileType('r'))
 
 
 def main():
