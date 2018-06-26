@@ -1,7 +1,7 @@
 # Asynchronous AWS API calls with asyncio
 
 ## Problem
-`boto3`, the AWS Python SDK, currently constitutes the primary API for interacting with the multitude of AWS services from Python. For all of its many capabilities, however, `boto3` - and its lower-level dependency `botocore` - are fundamentally synchronous and thus essentially incompatibile with `asyncio` coroutines. 
+`boto3`, the AWS Python SDK, currently constitutes the primary API for interacting with the multitude of AWS services from Python. For all of its many capabilities, `boto3` - and its lower-level dependency `botocore` - are fundamentally synchronous and thus essentially incompatibile with `asyncio` coroutines. 
 
 This can be somewhat limiting, because there often arises scenarios where we need to make a number of AWS service/API calls, wait for the results, and then further process the returned data. Performing each call in serial can waste time - if the call count is high - and while we could always use one of the `multiprocessing`, `threading`, or `concurrent.futures` modules, performing concurrent operations in this manner can inccur additional penalties because of the time/memory overhead involved in the creation of the threads/processes.
 
