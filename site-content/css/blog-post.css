@@ -1,7 +1,7 @@
 .hljs-keyword {
   color: #64dd17 !important
 }
-code:not(.python) {
+code:not(.python):not(.bash) {
     background: rgba(0,0,0,.07);
     padding: 0.2em;
 }

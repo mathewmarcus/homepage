@@ -1,14 +1,17 @@
-main p,
-main ul li,
-main ol li {
+main > p,
+main > section > a > p,
+main > ul > li,
+main > ol > li {
     font-size: 1.2em;
 }
 
-main ol ol li{
-    font-size: 1em;
+code {
+    font-size: 15px;
 }
+
 body main p a,
-body main section a{
+body main section a,
+body main li a {
     color: rgba(0,0,0,0.87);
     text-decoration: underline;
     font-weight: bold;
