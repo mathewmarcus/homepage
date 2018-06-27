@@ -1,0 +1,114 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="Mathew Marcus" name="author"/>
+<meta name="keywords" content="Linux, networks, CentOS, bash">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" media="screen" rel="stylesheet"/>
+<link href="/css/materialize.min.css" media="screen" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/obsidian.min.css" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" rel="stylesheet"/>
+<link href="/css/site.css" media="screen" rel="stylesheet"/>
+<link href="/css/blog-post.css" media="screen" rel="stylesheet"/>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0" name="viewport">
+</meta><title>Part 0: Introduction - Build a Home Network - Mathew Marcus</title></head>
+<body>
+<div class="navbar-fixed hide-on-large-only">
+<nav class="row grey darken-4 nav-extended">
+<div class="nav-wrapper col s12">
+<a class="brand-logo" href="#">Mathew Marcus</a>
+<div class="right-align" id="hamburger">
+<a href="#!" onclick="toggleNav()"><i class="tiny material-icons hide-on-med-and-up">menu</i></a>
+</div>
+<ul class="right hide-on-small-only" id="nav-mobile">
+<li><a class="grey-text text-lighten-2" href="/index.html">Blog</a></li>
+<li><a class="grey-text text-lighten-2" href="/about-me.html">About Me</a></li>
+<!-- <li><a class="grey-text text-lighten-2" href="">Projects</a></li> -->
+</ul>
+</div>
+<div class="col s12 hide-on-med-and-up" id="nav-collapse">
+<ul>
+<li><a class="grey-text text-lighten-2" href="/index.html">Blog</a></li>
+<li><a class="grey-text text-lighten-2" href="/about-me.html">About Me</a></li>
+<!-- <li><a class="grey-text text-lighten-2" href="#!">Projects</a></li> -->
+</ul>
+</div>
+</nav>
+</div>
+<div class="row">
+<aside class="col l4 xl3 hide-on-med-and-down grey darken-4 z-depth-5">
+<div id="child1">
+<h4 class="white-text center-align">Mathew Marcus</h4>
+<h6 class="white-text center-align">Coding</h6>
+<h6 class="white-text center-align">Infosec</h6>
+<h6 class="white-text center-align">(<span class="light-green-text text-accent-4">Arch</span>) Linux</h6>
+<br/>
+<ul>
+<li><a class="white-text waves-effect" href="/index.html">Blog</a></li>
+<li><a class="white-text waves-effect" href="/about-me.html">About Me</a></li>
+<!-- <li><a class="white-text waves-effect" href="#!">Projects</a></li> -->
+</ul>
+</div>
+<br/>
+<div class="center-align" id="child2">
+<a class="social_email"><i class="material-icons small white-text fas fa-envelope"></i></a>
+<a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons small white-text fab fa-github"></i></a>
+<a href="https://www.linkedin.com/in/mathew-marcus-76243b113/" target="_blank"><i class="material-icons small white-text fab fa-linkedin-in"></i></a>
+</div>
+</aside>
+<div class="col s12 l8 xl9 offset-l4 offset-xl3">
+<main class="container">
+<h1 id="introduction">Introduction</h1><p>This purpose of this tutorial series is to demonstrate one approach to setting up a home network. These initial tutorials will detail the setup and administration of a network built on Linux servers. That said, for the most part, clients of any OS type (OSX, Windows, or Linux) will be able to join and use the services on this network (more on that in later tutorials). The creation and administration of a Windows Active Directory (AD) domain will be covered in an entirely seperate tutorial series.</p><h3 id="linuxserverdistros">Linux Server Distros</h3><p>In an attempt to use a distro similar to that commonly found in enterprise envrionments (Red Hat), we'll be using CentOS for these tutorials. Additionally, given that I also run Arch on several of my servers, I will also include alternate Arch-specific instructions when they differ.</p><h3 id="hardware">Hardware</h3><p>I'm using a number of Virtualbox VMs as well as a wide variety of hardware in my network - ranging from an old Dell Inspiron laptop to an assortment of Raspberry Pi's - so don't feel as though you need anything particular/special.</p><h3 id="scripting">Scripting</h3><p>After the initial setup, all of the subsequent steps will be recorded in Ansible playbooks for the sake of clarity and reproducibility.</p><h3 id="tableofcontents">Table of Contents</h3><ol>
+<li>Introduction</li>
+<li>Server Installation and Initial Setup
+  <ol type="a">
+    <li><a href="/blog/building-a-home-network/part-1a.html">Basic Installation</a></li>
+    <li><a href="/blog/building-a-home-network/part-1b.html">Securing the Boot Process</a></li>
+  </ol>
+</li>
+
+
+<li>Gateway Router and Subnet Setup</li>
+</ol><!-- 3. [DNS] --><!-- 4. [DHCP] --><!-- 5. [DHCP Client] --><!-- 6. [LDAP] --><!-- 7. [Kerberos] --><!-- 8. [NFS] --><!-- 9. Kodi --><!-- 10. [Samba] --><!-- 11. [Web server] --><!-- 12. [Cameras] -->
+</main>
+<footer class="page-footer white">
+<div class="container">
+<div class="row">
+<div id="disqus_thread"></div>
+<script>
+
+		var disqus_config = function () {
+		this.page.url = window.origin + window.pathname;
+		this.page.identifier = 'building-a-home-network-part-0';
+		};
+
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+		s.src = 'https://mathewmarcus.disqus.com/embed.js';
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+	      </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+<div class="footer-copyright white black-text">
+<div class="center-align container">
+<div class="row">
+<a class="social_email"><i class="material-icons tiny black-text fas fa-envelope"></i></a>
+<a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons tiny black-text fab fa-github"></i></a>
+<a href="https://www.linkedin.com/in/mathew-marcus-76243b113/" target="_blank"><i class="material-icons tiny black-text fab fa-linkedin-in"></i></a>
+</div>
+<div class="row">
+		© Mathew Marcus 2018
+		</div>
+</div>
+</div>
+</footer>
+</div>
+</div>
+<script src="/js/materialize.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" type="text/javascript"></script>
+<script src="/js/site.js" type="text/javascript"></script>
+</body>
+</html>
+1
