@@ -241,7 +241,7 @@ And sure enough, we see the three final partitions from the above `lsblk` output
    /etc/fstab entry: `/dev/mapper/centos_server-home /home xfs defaults,x-systemd.device-timeout=0 0 0`
 
 #### Why LVM?
-This use of LVM is ideal for our use case, because when we later want to install and run an NFS or Samba file server we can easily add physical volumes to the centos_server volume group and then extended one of the logical volumes if we ever find ourselves running low on space. We will never need to modify the underlying partitions.
+LVM is ideal for our use case, because when we later want to install and run an NFS or Samba file server we can easily add physical volumes to the centos_server volume group and then extended one of the logical volumes if we ever find ourselves running low on space. We will never need to modify the underlying partitions.
 
 
 ### Prevent Laptop Suspensions/Sleep/Hiberation (Optional)

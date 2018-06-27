@@ -154,7 +154,7 @@ Far more limited than its Stage 2 analog, the GRUB rescue shell contains only a 
 ### Other problems
 Sometimes, you may encounter a problem which stops you from even reaching the GRUB rescue shell. For example, lets assume that in the boot partition encryption process, you forgot the final `grub2-install /dev/sda` command. In this case, the GRUB Stage 1.5 bootloader would lack the LUKS modules necessary to decrypt the boot partition. Since you can't boot the system into any sort of recovery shell, the solution is to boot from an external medium and correct the problem - which in this case would involve running `grub2-install /dev/sda`.
 
-First, if you don't already have one, create a bootable USB flash drive like the one you used to install CentOS. It one doesn't need a GUI. Once the OS is up and running, you'll need to recreate the environment of your actual HOST OS - we'll be doing this on /mnt - before running the commands.
+First, if you don't already have one, create a bootable USB flash drive like the one you used to install CentOS. Something as simple as the [Arch ISO](https://www.archlinux.org/download/) will work fine since we don't need any sort of GUI. Once the OS is up and running, you'll need to recreate the environment of your actual HOST OS - we'll be doing this on /mnt - before running the commands.
 
 1. Decrypt the encrypted partitions
    ```bash

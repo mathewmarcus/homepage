@@ -17,7 +17,7 @@ After the initial setup, all of the subsequent steps will be recorded in Ansible
 ### Table of Contents
 0. Introduction
 1. Server Installation and Initial Setup
-  1. [Basic Installation](/blog/building-a-home-network/part-1a.html)
+  1. [Server Installation and Initial Setup](/blog/building-a-home-network/part-1a.html)
   2. [Securing the Boot Process](/blog/building-a-home-network/part-1b.html)
 2. Gateway Router and Subnet Setup
 <!-- 3. [DNS] -->
