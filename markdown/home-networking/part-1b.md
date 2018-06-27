@@ -188,4 +188,4 @@ Now reboot into your host system and everything should proceed normally.
 
 
 ## What's Next
-In the next tutorial, we'll set up DNS.
+In the next tutorial, we'll set up our gateway router and subnets.

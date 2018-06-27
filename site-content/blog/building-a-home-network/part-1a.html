@@ -2,6 +2,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="Mathew Marcus" name="author"/>
+<meta name="keywords" content="Linux, networks, CentOS, bash">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" media="screen" rel="stylesheet"/>
 <link href="/css/materialize.min.css" media="screen" rel="stylesheet" type="text/css"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/obsidian.min.css" rel="stylesheet"/>
@@ -9,7 +10,7 @@
 <link href="/css/site.css" media="screen" rel="stylesheet"/>
 <link href="/css/blog-post.css" media="screen" rel="stylesheet"/>
 <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0" name="viewport">
-</meta><title>Server Installation and Initial Setup - Mathew Marcus</title></head>
+</meta><title>Part 1a: Server Installation and Initial Setup - Building a Home Network - Mathew Marcus</title></head>
 <body>
 <div class="navbar-fixed hide-on-large-only">
 <nav class="row grey darken-4 nav-extended">
@@ -56,12 +57,12 @@
 </aside>
 <div class="col s12 l8 xl9 offset-l4 offset-xl3">
 <main class="container">
-<h1 id="serverinstallationandinitialsetup">Server Installation and Initial Setup</h1><p>This tutorial presents the steps for setting up a base installation for any one of the servers on the network.</p><h2 id="linuxdistro">Linux Distro</h2><p>Centos 7</p><h2 id="hardware">Hardware</h2><p>For this tutorial I'm using a Dell Inspiron N5050.</p><ul>
+<h1 id="serverinstallationandinitialsetup">Server Installation and Initial Setup</h1><p>This tutorial presents the steps for setting up a base installation for any one of the servers on the network.</p><h2 id="linuxdistros">Linux Distros</h2><p>Centos 7</p><h2 id="hardware">Hardware</h2><p>For this tutorial I'm using a Dell Inspiron N5050.</p><ul>
 <li>Processor: Intel i3</li>
-<li>Hard Drive: 500G SSD</li>
+<li>Hard Drive: 500G HD</li>
 <li>RAM 4G</li>
 <li>Firmware: BIOS</li>
-</ul><p>One thing to note here is that because we lack UEFI firmware AND have a disk smaller than 2TB, the CentOS installer will, by default, create a Master Boot Record (MBR) partition table. We can, however, instruct the installer to create a GUID Partition Table (GPT), as detailed <a href="#" target="_blank">below</a>.</p><h2 id="steps">Steps</h2><h3 id="downloadisoandcreatebootableusb">Download ISO and create bootable USB</h3><ol>
+</ul><p>One thing to note here is that because we lack UEFI firmware AND have a disk smaller than 2TB, the CentOS installer will, by default, create a Master Boot Record (MBR) partition table. We can, however, instruct the installer to create a GUID Partition Table (GPT), as detailed below.</p><h2 id="steps">Steps</h2><h3 id="downloadisoandcreatebootableusb">Download ISO and create bootable USB</h3><ol>
 <li><p>Download the Centos Minimal Install ISO and the associated checksums</p>
 <pre><code class="bash language-bash">$ wget http://${some_mirror}/linux/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso \
       http://${some_mirror}/linux/centos/7/isos/x86_64/sha256sum.txt
@@ -78,23 +79,26 @@ $ dd status=progress if=CentOS-7-x86_64-Minimal-1804.iso of=/dev/sdX
 </code></pre></li>
 </ol><h3 id="install">Install</h3><p>With the flash drive inserted into a USB port of the machine on which you want to install Centos, reboot and hold/press F12 to bring up the boot options, selecting the one which says <code>USB Storage Device</code> - or something similar.</p><p>From there you'll be presented with an additional list of options;</p><ol>
 <li>Navigate to <code>Install CentOS 7</code>.</li>
-<li>Request a GUID Partition Table (GPT)</li>
-<li>Press TAB to bring up the installer boot command line</li>
+<li>Request a GUID Partition Table (GPT)
+  <ol><li>Press TAB to bring up the installer boot command line</li>
 <li>Append the option <code>inst.gpt</code></li>
 <li>Press ENTER</li>
+</ol>
+</li>
 </ol><p>Now you'll be presented with a GUI allowing you to select various configuration preferences such as language/locale, keyboard layout, timezone preferences, etc. While making your selections, take note of two important options:</p><ol>
-<li>Network and Hostname
-Replace localhost.localdomain with a NON-fully-qualified domain name. Domain setup is part of a later tutorial - and currently we're not assuming any network connectivity - so just select a hostname which will correspond to your machine and which DOES NOT end in a <code>.</code>. I've selected <code>server</code>.</li>
-<li>Installation Destination</li>
-<li>Select the disk on which you want to install CentOS</li>
+<li><code>Network and Hostname</code>
+<ul><li>
+Replace localhost.localdomain with a NON-fully-qualified domain name. Domain setup is part of a later tutorial - and currently we're not assuming any network connectivity - so just select a hostname which will correspond to your machine and which DOES NOT end in a <code>.</code>. I've selected <code>server</code>.</li></ul></li>
+<li><code>Installation Destination</code><ol>
+<li>Select the disk on which you want to install CentOS
 <li>Select <code>automatically configure partitioning</code></li>
-<li>Select <code>Encrypt my data</code> (to enable LUKS encryption of the root partition) and choose a passphrase</li>
+<li>Select <code>Encrypt my data</code> (to enable LUKS encryption of the root partition) and choose a passphrase</li></ol></li>
 </ol><p>Now select <code>Begin Installation</code>, and while the install proceeds you will be presented with two final options</p><ol>
-<li>Root password: set a root password (Ideally a different password from that used for the LUKS partition)</li>
-<li>Create a non-root user
-Enter a third distinct password
-Select <code>Make this user administrator</code> to add your user to the <code>wheel</code> group and give them <code>sudo</code> access</li>
-</ol><p>The install process will take some time to finish. After it's complete, press <code>Reboot</code> to boot your new system.</p><h2 id="additionalconfiguration">Additional Configuration</h2><h3 id="inspectingthenewsystempartitions">Inspecting the new system partitions</h3><p>On bootup, the GRUB Stage 2 bootloader will prompt you for the passphrase you entered for the encyrpted root partition. Enter it, and then you will be prompted with the familiar tty login. For now, since almost all of the following tasks will require root access, login as the root user (we'll disable this later).</p><p>After logging in let's examine the the partitioned disks(s).</p><pre><code class="bash language-bash">$ lsblk -o name,type,size,uuid,fstype,mountpoint
+<li><code>Root password</code>: set a root password (Ideally a different password from that used for the LUKS partition)</li>
+<li><code>Create a non-root user</code><ol>
+<li>Enter a third distinct password</li>
+<li>Select <code>Make this user administrator</code> to add your user to the <code>wheel</code> group and give them <code>sudo</code> access</li></ol></li>
+</ol><p>The install process will take some time to finish. After it's complete, press <code>Reboot</code> to boot your new system.</p><h2 id="additionalconfiguration">Additional Configuration</h2><h3 id="inspectingthenewsystempartitions">Inspecting the new system partitions</h3><p>On bootup, the GRUB Stage 2 bootloader will prompt you for the passphrase you entered for the encrypted root partition. Enter it, and you will be prompted with the familiar tty login. For now, since almost all of the following tasks will require root access, login as the root user.</p><p>After logging in let's examine the the partitioned disks(s).</p><pre><code class="bash language-bash">$ lsblk -o name,type,size,uuid,fstype,mountpoint
 NAME                                          TYPE    SIZE UUID                                   FSTYPE      MOUNTPOINT
 sda                                           disk  465.8G                                                    
 ├─sda1                                        part      1M                                                    
@@ -104,7 +108,7 @@ sda                                           disk  465.8G
     ├─centos_server-root                      lvm      50G d7718a14-a0d6-4401-8918-8eb0a862869f   xfs         /
     ├─centos_server-swap                      lvm     3.9G b4867c19-5744-48b8-b65f-34dc3c51b52b   swap        [SWAP]
     └─centos_server-home                      lvm   410.9G 204b1e48-4035-4ea5-be30-d1b7849f0f21   xfs         /home
-</code></pre><p>We've modified the default <code>lsblk</code> output slightly to include pertinent information. For here we can see our primary disk (sda) and all of it's partitions. Let's analyze them in order.</p><h4 id="sda1">sda1</h4><p>This partition is a mere 1M in size, has no filesystem - hence the lack of a filesystem UUID in the UUID column, and is thus unmounted. Nevertheless, it plays a very important role: it's the BIOS boot partition. In order to explain it's purpose, we need a little background.</p><p>GRUB Stage 1 occupies the first 446 bytes of the first 512 byte sector (sector 0) of a disk (the remaining bytes of the first section contain the MBR partition table). Due to this hard 446 byte limit, GRUB Stage 1 is little more than a pointer to GRUB Stage 1.5 which, in MBR partitioned disks, occupies the 63 sectors (32256 bytes) before the first partition entry, a region known as the post-MBR gap. </p><p>This post-MBR gap solution does not, however, work for GPT partitioned disks because this area is used to store the GPT partition table. So in this case (i.e. in our case), the GRUB Stage 1.5 bootloader is placed into a specially labeled partition; for us, this is sda1.</p><p>We can verify the existence of this label with <code>parted</code></p><pre><code class="bash language-bash">$ parted /dev/sda unit Mi print
+</code></pre><p>We've modified the default <code>lsblk</code> output slightly to include pertinent information. For here we can see our primary disk (sda) and all of it's partitions. Let's analyze them in order.</p><h4 id="sda1">sda1</h4><p>This partition is a mere 1M in size, has no filesystem - hence the lack of a filesystem UUID in the UUID column, and is thus unmounted. Nevertheless, it plays a very important role: it's the BIOS boot partition. In order to explain it's purpose, we need a little background.</p><p>GRUB Stage 1 occupies the first 446 bytes of the first 512 byte sector (sector 0) of a disk (the remaining bytes of the first section contain the MBR partition table). Due to this hard 446 byte limit, GRUB Stage 1 is little more than a pointer to GRUB Stage 1.5 which, in MBR partitioned disks, occupies the 63 sectors (32,256 bytes) before the first partition entry, a region known as the post-MBR gap. </p><p>This post-MBR gap solution does not, however, work for GPT partitioned disks because this area is used to store the GPT partition table. So in this case (i.e. in our case), the GRUB Stage 1.5 bootloader is placed into a specially labeled partition; for us, this is sda1.</p><p>We can verify the existence of this label with <code>parted</code></p><pre><code class="bash language-bash">$ parted /dev/sda unit Mi print
 Model: ATA ST500LM012 HN-M5 (scsi)
 Disk /dev/sda: 476940MiB
 Sector size (logical/physical): 512B/512B
@@ -119,7 +123,7 @@ Number  Start    End        Size       File system  Name  Flags
 UUID=550016b9-f79c-4176-be50-e753166fc589 /boot                   xfs     defaults        0 0
 </code></pre><h4 id="sda3">sda3</h4><p>This is our LUKS encrypted root partition, which we can verify using <code>cryptsetup</code> (or by examing the FSTYPE column of the above <code>lsblk</code> output):</p><pre><code class="bash language-bash">$ cryptsetup -v isLuks /dev/sda3
 Command Successful
-</code></pre><p>After Grub Stage 2 has loaded the kernel and the initramfs into memory and started the kernel, the kernel promps us for a passphrase and opens (i.e. decrypts and then mounts) this partition using modules in initramfs, which at that point is mounted to / as the root filesystem.</p><h5 id="luks4809d47711904ac3aa4aabf69d961578">luks-4809d477-1190-4ac3-aa4a-abf69d961578</h5><p>This is our decrypted LUKS partition. By again examining the above <code>lsblk</code> output, we can see that the UUID in the name corresponds to the filesystem ID sda3 LUKS partition.</p><p>This FSTYPE column of the <code>lsblk</code> output contains LVM2_member, revealing that this a Logical Volume Manager (LVM) physical volume (PV).</p><p>Let's get some more information about this volume</p><pre><code class="bash language-bash">$ pvdisplay /dev/mapper/luks-4809d477-1190-4ac3-aa4a-abf69d961578
+</code></pre><p>After Grub Stage 2 has loaded the kernel and the initramfs into memory and started the kernel, the kernel promps us for a passphrase and opens (i.e. decrypts and then mounts) this partition using modules in the initramfs, which at that point is mounted to / as the root filesystem.</p><h5 id="luks4809d47711904ac3aa4aabf69d961578">luks-4809d477-1190-4ac3-aa4a-abf69d961578</h5><p>This is our decrypted LUKS partition. By again examining the above <code>lsblk</code> output, we can see that the UUID in the name corresponds to the filesystem UUID of the sda3 LUKS partition.</p><p>This FSTYPE column of the <code>lsblk</code> output contains <code>LVM2_member</code>, revealing that this a Logical Volume Manager (LVM) physical volume (PV).</p><p>Let's get some more information about this volume</p><pre><code class="bash language-bash">$ pvdisplay /dev/mapper/luks-4809d477-1190-4ac3-aa4a-abf69d961578
   --- Physical volume ---
   PV Name               /dev/mapper/luks-4809d477-1190-4ac3-aa4a-abf69d961578
   VG Name               centos_server
@@ -203,25 +207,20 @@ Command Successful
   - currently set to     256
   Block device           253:1
 </code></pre><p>And sure enough, we see the three final partitions from the above <code>lsblk</code> output in the form of logical volumes (LV)s</p><ol>
-<li>50.00 Gi LV with an XFS filesystem mounted to /root</li>
-</ol><ul>
-<li>/etc/fstab entry: /dev/mapper/centos_server-root / xfs defaults,x-systemd.device-timeout=0 0 0</li>
-</ul><ol>
-<li>3.88 Gi LV functioning as swap space</li>
-</ol><ul>
-<li>/etc/fstab entry: /dev/mapper/centos_server-swap swap swap defaults,x-systemd.device-timeout=0 0 0</li>
-</ul><ol>
-<li>~410.8 (i.e. the remaining disk space) Gi LV with an XFS filesystem mounted to /home</li>
-</ol><ul>
-<li>/etc/fstab entry: /dev/mapper/centos_server-home /home xfs defaults,x-systemd.device-timeout=0 0 0</li>
-</ul><h4 id="whylvm">Why LVM?</h4><p>This use of LVM is ideal for our use case, because when we later want to install and run an NFS or Samba file server we can easily add physical volumes to the centos_server volume group and then extended one of the logical volumes if we ever find ourselves running low on space. We will never need to modify the underlying partitions.</p><h3 id="preventlaptopsuspensionssleephiberationoptional">Prevent Laptop Suspensions/Sleep/Hiberation (Optional)</h3><p>If, like me, you're using a laptop, you will likely want your server to continue running even if you close the lid. To to do this,</p><ol>
+<li>50.00 Gi LV with an XFS filesystem mounted to /root
+<ul><li>/etc/fstab entry: <pre><code class="bash">/dev/mapper/centos_server-root / xfs defaults,x-systemd.device-timeout=0 0 0</code></pre></li></ul></li>
+<li>3.88 Gi LV functioning as swap space
+<ul><li>/etc/fstab entry: <pre><code class="bash">/dev/mapper/centos_server-swap swap swap defaults,x-systemd.device-timeout=0 0 0</code></pre></li></ul></li>
+<li>~410.8 (i.e. the remaining disk space) Gi LV with an XFS filesystem mounted to /home
+<ul><li>/etc/fstab entry: <pre><code class="bash">/dev/mapper/centos_server-home /home xfs defaults,x-systemd.device-timeout=0 0 0</code></pre></li></ul></li>
+</ol><h4 id="whylvm">Why LVM?</h4><p>This use of LVM is ideal for our use case, because when we later want to install and run an NFS or Samba file server we can easily add physical volumes to the centos_server volume group and then extended one of the logical volumes if we ever find ourselves running low on space. We will never need to modify the underlying partitions.</p><h3 id="preventlaptopsuspensionssleephiberationoptional">Prevent Laptop Suspensions/Sleep/Hiberation (Optional)</h3><p>If, like me, you're using a laptop, you will likely want your server to continue running even if you close the lid. To to do this,</p><ol>
 <li><p>Uncomment the <code>HandleLidSwitch</code> and <code>HandleLidSwitchDocked</code> properties /etc/systemd/logind.conf and set them to <code>ignore</code> </p>
 <pre><code class="bash language-bash">$ sed -i -e 's/^#\(HandleLidSwitch= \).*$/^\1ignore$/' -e 's/^#\(HandleLidSwitchDocked= \).*$/^\1ignore$/' /etc/systemd/logind.conf
 </code></pre></li>
 <li><p>Restart <code>systemd-logind</code></p>
 <pre><code class="bash language-bash">$ systemctl restart systemd-logind.service
 </code></pre></li>
-</ol><h2 id="whatsnext">What's Next</h2><p>In the next tutorial, we'll further show how we can further harden the physical security of our servers by encrypting the boot partition.</p>
+</ol><h2 id="whatsnext">What's Next</h2><p>In the next tutorial, we'll show how we can further harden the physical security of our servers by encrypting the boot partition.</p>
 </main>
 <footer class="page-footer white">
 <div class="container">

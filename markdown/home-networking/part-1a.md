@@ -8,11 +8,11 @@ Centos 7
 ## Hardware
 For this tutorial I'm using a Dell Inspiron N5050.
 * Processor: Intel i3
-* Hard Drive: 500G SSD
+* Hard Drive: 500G HD
 * RAM 4G
 * Firmware: BIOS
 
-One thing to note here is that because we lack UEFI firmware AND have a disk smaller than 2TB, the CentOS installer will, by default, create a Master Boot Record (MBR) partition table. We can, however, instruct the installer to create a GUID Partition Table (GPT), as detailed [below](#).
+One thing to note here is that because we lack UEFI firmware AND have a disk smaller than 2TB, the CentOS installer will, by default, create a Master Boot Record (MBR) partition table. We can, however, instruct the installer to create a GUID Partition Table (GPT), as detailed below.
 
 
 ## Steps
@@ -50,26 +50,27 @@ From there you'll be presented with an additional list of options;
   3. Press ENTER
 
 Now you'll be presented with a GUI allowing you to select various configuration preferences such as language/locale, keyboard layout, timezone preferences, etc. While making your selections, take note of two important options:
-1. Network and Hostname
+1. `Network and Hostname`
    Replace localhost.localdomain with a NON-fully-qualified domain name. Domain setup is part of a later tutorial - and currently we're not assuming any network connectivity - so just select a hostname which will correspond to your machine and which DOES NOT end in a `.`. I've selected `server`.
-2. Installation Destination
+2. `Installation Destination`
    1. Select the disk on which you want to install CentOS
    2. Select `automatically configure partitioning`
    3. Select `Encrypt my data` (to enable LUKS encryption of the root partition) and choose a passphrase
 
 Now select `Begin Installation`, and while the install proceeds you will be presented with two final options
 
-1. Root password: set a root password (Ideally a different password from that used for the LUKS partition)
-2. Create a non-root user
-   Enter a third distinct password
-   Select `Make this user administrator` to add your user to the `wheel` group and give them `sudo` access
+1. `Root password`: set a root password (Ideally a different password from that used for the LUKS partition)
+2. `Create a non-root user`
+   1. Enter a third distinct password
+   2. Select `Make this user administrator` to add your user to the `wheel` group and give them `sudo` access
+   
 
 The install process will take some time to finish. After it's complete, press `Reboot` to boot your new system.
 
 
 ## Additional Configuration
 ### Inspecting the new system partitions
-On bootup, the GRUB Stage 2 bootloader will prompt you for the passphrase you entered for the encyrpted root partition. Enter it, and then you will be prompted with the familiar tty login. For now, since almost all of the following tasks will require root access, login as the root user (we'll disable this later).
+On bootup, the GRUB Stage 2 bootloader will prompt you for the passphrase you entered for the encrypted root partition. Enter it, and you will be prompted with the familiar tty login. For now, since almost all of the following tasks will require root access, login as the root user.
 
 After logging in let's examine the the partitioned disks(s).
 ```bash
@@ -90,7 +91,7 @@ We've modified the default `lsblk` output slightly to include pertinent informat
 #### sda1
 This partition is a mere 1M in size, has no filesystem - hence the lack of a filesystem UUID in the UUID column, and is thus unmounted. Nevertheless, it plays a very important role: it's the BIOS boot partition. In order to explain it's purpose, we need a little background.
 
-GRUB Stage 1 occupies the first 446 bytes of the first 512 byte sector (sector 0) of a disk (the remaining bytes of the first section contain the MBR partition table). Due to this hard 446 byte limit, GRUB Stage 1 is little more than a pointer to GRUB Stage 1.5 which, in MBR partitioned disks, occupies the 63 sectors (32256 bytes) before the first partition entry, a region known as the post-MBR gap. 
+GRUB Stage 1 occupies the first 446 bytes of the first 512 byte sector (sector 0) of a disk (the remaining bytes of the first section contain the MBR partition table). Due to this hard 446 byte limit, GRUB Stage 1 is little more than a pointer to GRUB Stage 1.5 which, in MBR partitioned disks, occupies the 63 sectors (32,256 bytes) before the first partition entry, a region known as the post-MBR gap. 
 
 This post-MBR gap solution does not, however, work for GPT partitioned disks because this area is used to store the GPT partition table. So in this case (i.e. in our case), the GRUB Stage 1.5 bootloader is placed into a specially labeled partition; for us, this is sda1.
 
@@ -127,12 +128,12 @@ $ cryptsetup -v isLuks /dev/sda3
 Command Successful
 ```
 
-After Grub Stage 2 has loaded the kernel and the initramfs into memory and started the kernel, the kernel promps us for a passphrase and opens (i.e. decrypts and then mounts) this partition using modules in initramfs, which at that point is mounted to / as the root filesystem.
+After Grub Stage 2 has loaded the kernel and the initramfs into memory and started the kernel, the kernel promps us for a passphrase and opens (i.e. decrypts and then mounts) this partition using modules in the initramfs, which at that point is mounted to / as the root filesystem.
 
 ##### luks-4809d477-1190-4ac3-aa4a-abf69d961578
-This is our decrypted LUKS partition. By again examining the above `lsblk` output, we can see that the UUID in the name corresponds to the filesystem ID sda3 LUKS partition.
+This is our decrypted LUKS partition. By again examining the above `lsblk` output, we can see that the UUID in the name corresponds to the filesystem UUID of the sda3 LUKS partition.
 
-This FSTYPE column of the `lsblk` output contains LVM2_member, revealing that this a Logical Volume Manager (LVM) physical volume (PV).
+This FSTYPE column of the `lsblk` output contains `LVM2_member`, revealing that this a Logical Volume Manager (LVM) physical volume (PV).
 
 Let's get some more information about this volume
 ```bash
@@ -233,11 +234,11 @@ $ lvdisplay centos_server
 And sure enough, we see the three final partitions from the above `lsblk` output in the form of logical volumes (LV)s
 
 1. 50.00 Gi LV with an XFS filesystem mounted to /root
-   * /etc/fstab entry: /dev/mapper/centos_server-root / xfs defaults,x-systemd.device-timeout=0 0 0
+   /etc/fstab entry: `/dev/mapper/centos_server-root / xfs defaults,x-systemd.device-timeout=0 0 0`
 2. 3.88 Gi LV functioning as swap space
-   * /etc/fstab entry: /dev/mapper/centos_server-swap swap swap defaults,x-systemd.device-timeout=0 0 0
+   /etc/fstab entry: `/dev/mapper/centos_server-swap swap swap defaults,x-systemd.device-timeout=0 0 0`
 3. ~410.8 (i.e. the remaining disk space) Gi LV with an XFS filesystem mounted to /home
-   * /etc/fstab entry: /dev/mapper/centos_server-home /home xfs defaults,x-systemd.device-timeout=0 0 0
+   /etc/fstab entry: `/dev/mapper/centos_server-home /home xfs defaults,x-systemd.device-timeout=0 0 0`
 
 #### Why LVM?
 This use of LVM is ideal for our use case, because when we later want to install and run an NFS or Samba file server we can easily add physical volumes to the centos_server volume group and then extended one of the logical volumes if we ever find ourselves running low on space. We will never need to modify the underlying partitions.
@@ -259,4 +260,4 @@ If, like me, you're using a laptop, you will likely want your server to continue
 
 
 ## What's Next
-In the next tutorial, we'll further show how we can further harden the physical security of our servers by encrypting the boot partition.
+In the next tutorial, we'll show how we can further harden the physical security of our servers by encrypting the boot partition.
