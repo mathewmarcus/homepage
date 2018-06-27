@@ -68,16 +68,53 @@
 	  <h1>Blog</h1>
 
 	  <section>
-	    <a href="blog/asynchronous-aws-api-requests-with-asyncio.html">
+	    <a href="/blog/building-a-home-network/part-1b.html">
+	      <h4> Building a Home Network - Part 1b: Securing the Boot Process</h4>
+	    </a>
+	    <div class="chip blue">Linux</div>
+	    <div class="chip orange">Networking</div>
+	    <a href="/blog/building-a-home-network/part-1b.html">
+	      <p>
+		In this tutorial we'll build on the install from the previous tutorial and further harden the physical security of our installs by encrypting the boot partition...
+	    </p>
+	    </a>
+	  </section>
+
+	  <section>
+	    <a href="/blog/building-a-home-network/part-1a.html">
+	      <h4>Building a Home Network - Part 1a: Server Installation and Initial Setup</h4>
+	    </a>
+	    <div class="chip blue">Linux</div>
+	    <div class="chip orange">Networking</div>
+	    <a href="/blog/building-a-home-network/part-1a.html">
+	    <p>
+		This tutorial presents the steps for setting up a base installation for any one of the servers on the network...
+	    </p>
+	    </a>
+	  </section>
+
+	  <section>
+	    <a href="/blog/building-a-home-network/part-0.html">
+	      <h4> Build a Home Network - Part 0: Introduction</h4>
+	    </a>
+	    <div class="chip blue">Linux</div>
+	    <div class="chip orange">Networking</div>
+	    <a href="/blog/building-a-home-network/part-0.html">
+	      <p>
+		This purpose of this tutorial series is to demonstrate one approach to setting up a home network. These initial tutorials will detail the setup and administration of a network built on Linux servers. That said, for the most part, clients of any OS type (OSX, Windows, or Linux) will be able to join and use the services on this network (more on that in later tutorials). The creation and administration of a Windows Active Directory (AD) domain will be covered in an entirely seperate tutorial series...
+	    </p>
+	    </a>
+	  </section>
+
+	  <section>
+	    <a href="/blog/asynchronous-aws-api-requests-with-asyncio.html">
 	      <h4>Asynchronous AWS API requests with asyncio</h4>
 	    </a>
 	      <div class="chip yellow">AWS</div>
       	      <div class="chip purple lighten-2">Python</div>
-	    <a href="blog/asynchronous-aws-api-requests-with-asyncio.html">
+	    <a href="/blog/asynchronous-aws-api-requests-with-asyncio.html">
 	    <p>
-	      boto3, the AWS Python SDK, currently constitutes the primary API for interacting with the multitude of AWS services from Python. For all of its many capabilities, however, boto3 - and its lower-level dependency botocore - are fundamentally synchronous and thus essentially incompatibile with asyncio coroutines.<span class="hide-on-large-only">..</span></p>
-	    
-	    <p class="hide-on-med-and-down">This can be somewhat limiting, because there often arises scenarios where we need to make a number of AWS service/API calls, wait for the results, and then further process the returned data. Performing each call in serial can waste time - if the call count is high - and while we could always use one of the multiprocessing, threading, or concurrent.futures modules, performing concurrent operations in this manner can inccur additional penalties because of the time/memory overhead involved in the creation of the threads/processes...
+	      boto3, the AWS Python SDK, currently constitutes the primary API for interacting with the multitude of AWS services from Python. For all of its many capabilities, however, boto3 - and its lower-level dependency botocore - are fundamentally synchronous and thus essentially incompatibile with asyncio coroutines.<span class="hide-on-large-only">...
 	    </p>
 	    </a>
 	  </section>
