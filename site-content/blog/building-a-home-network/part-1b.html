@@ -58,9 +58,9 @@
 <div class="col s12 l8 xl9 offset-l4 offset-xl3">
 <main class="container">
   <h1 id="addditionalpreliminaryconfiguration">Securing the Boot Process</h1>
-    <div class="chip blue">Linux</div>
+  <div class="chip blue">Linux</div>
   <div class="chip orange">Networking</div>
-
+  <div class="chip red">InfoSec</div>
 <p>In this tutorial we'll build on the install from the previous tutorial and further harden the physical security by encrypting the boot partition. </p><h2 id="linuxdistro">Linux Distros</h2><ul><li>Centos 7</li><li>Arch</li></ul><h2 id="encryptbootpartition">Encrypting the boot partition</h2><p>Encrypting the root partition is an excellent step, but only the first one. An unencrypted boot partition opens you up to an Evil Maid attack. The details of this attack are beyond the scope of this post, but essentially because the boot partition is unencrypted an attacker with physical access to your machine could, with relative ease, install a bootkit by replacing or modifying:</p><ol>
 <li>any one of the GRUB Stage 2 modules</li>
 <li>the initial ramdisk (initramfs) or any of the files in it</li>
