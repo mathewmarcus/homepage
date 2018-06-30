@@ -146,7 +146,7 @@ Command successful
 </code></pre><p>Note that here we identify the boot partiition not by its name, luks-fa634f69-92eb-41d1-a291-72b34df233e4, but by it's filesystem UUID, as shown in the above <code>lsblk</code> output.</li>
 </ol><h2 id="troubleshooting">Troubleshooting</h2><h3 id="incorrectlyenteredbootpartitionpassphrase">Incorrectly entered boot partition passphrase</h3><p>GRUB Stage 1.5 is rather simple. After all, it only has 32,256 bytes (i.e. the size of the post-MBR gap) in which to store its code. As such, if you incorrectly enter the passphrase for your newly created boot partition, GRUB will drop you into a rescue shell instead of reprompting you. </p><p>Far more limited than its Stage 2 analog, the GRUB rescue shell contains only a handful of commands which, unfortunately, do not include <code>help</code> or <code>?</code>. However, the boot sequence can still be resumed with the following commands.</p><ol>
 <li><p>Unlock and mount the boot partition (/dev/sda2)</p>
-<pre><code class="bash language-bash">grub-rescue&gt; cryptomount (hd0,msdos2)
+<pre><code class="bash language-bash">grub-rescue&gt; cryptomount (hd0,gpt2)
 </code></pre></li>
 <li><p>Load the <code>normal</code> module</p>
 <pre><code class="bash language-bash">grub-rescue&gt; insmod normal

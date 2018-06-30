@@ -137,7 +137,7 @@ Far more limited than its Stage 2 analog, the GRUB rescue shell contains only a 
 
 1. Unlock and mount the boot partition (/dev/sda2)
    ```bash
-   grub-rescue> cryptomount (hd0,msdos2)
+   grub-rescue> cryptomount (hd0,gpt2)
    ```
 
 2. Load the `normal` module
