@@ -32,8 +32,6 @@ We can see by looking at the below form HTML and the request in the network tab 
 And the corresponding php is pretty much exactly what we'd expect: raw `shell_exec`ing of the unsanitized input, which allows us to inject any `;` or `&&`-delimited `bash` command as illustrated above. Note here is the outer `if` condition; if we were to send this request using an external HTTP client, (e.g. curl), we'd still need to include the `submit` parameter in addition to the `ip` parameter.
 
 ```php
-<?php 
-
 if( isset( $_POST[ 'submit' ] ) ) { 
 
     $target = $_REQUEST[ 'ip' ]; 
@@ -52,15 +50,12 @@ if( isset( $_POST[ 'submit' ] ) ) {
     } 
      
 } 
-?>
 ```
 ## Medium
-If we try this same exploitation method after setting the level to medium, we receive no output. A reasonable assumption - confirmed by examining the source code - is that the underlying PHP script is escaping the delimiter characters `;` and `&&`. More specifically, `str_replace` is used to replace these delmiters with the empty string. Because we only see stdout, we don't see the errors that would arise when the PHP interpreters attempts to run the command after it has been stripped of the aforementioned delimiters.
+If we try this same exploitation method after setting the level to medium, we receive no output. A reasonable assumption - confirmed by examining the source code - is that the underlying PHP script is escaping the delimiter characters `;` and `&&`. More specifically, `str_replace` is used to replace these delmiters with the empty string. Because we only see stdout, we don't see the errors that would arise when the PHP interpreters attempt to run the command after it has been stripped of the aforementioned delimiters.
 
 ### Code Analysis
 ```php
-<?php 
-
 if( isset( $_POST[ 'submit'] ) ) { 
 
     $target = $_REQUEST[ 'ip' ]; 
@@ -86,8 +81,6 @@ if( isset( $_POST[ 'submit'] ) ) {
          
     } 
 } 
-
-?>
 ```
 
 ### Exploit
